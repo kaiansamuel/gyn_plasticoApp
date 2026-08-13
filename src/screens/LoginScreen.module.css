@@ -1,0 +1,161 @@
+.page {
+  min-height: 100vh;
+  background: var(--color-background);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xl) var(--spacing-lg);
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-xl);
+}
+
+.brandMark {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-card);
+  background: var(--color-primary);
+  color: var(--color-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-screen-title);
+  font-weight: 700;
+}
+
+.brandName {
+  font-size: var(--font-screen-title);
+  font-weight: 700;
+  color: var(--color-primary-dark);
+  margin: 0;
+}
+
+.brandTagline {
+  font-size: var(--font-helper);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.card {
+  width: 100%;
+  max-width: 380px;
+  background: var(--color-surface);
+  border-radius: var(--radius-card);
+  border: 1px solid var(--color-border);
+  padding: var(--spacing-xl);
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+}
+
+.cardTitle {
+  font-size: var(--font-section-title);
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0 0 4px;
+}
+
+.cardSubtitle {
+  font-size: var(--font-helper);
+  color: var(--color-text-secondary);
+  margin: 0 0 var(--spacing-lg);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.label {
+  font-size: var(--font-helper);
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.inputWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input {
+  width: 100%;
+  height: var(--touch-target);
+  padding: 0 var(--spacing-md);
+  border-radius: var(--radius-field);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  font-size: var(--font-body);
+}
+
+.input.hasError {
+  border-color: var(--color-danger);
+}
+
+.passwordInput {
+  padding-right: 44px;
+}
+
+.toggleVisibility {
+  position: absolute;
+  right: var(--spacing-sm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: transparent;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+
+.errorText {
+  font-size: var(--font-caption);
+  color: var(--color-danger);
+}
+
+.banner {
+  border-radius: var(--radius-field);
+  padding: var(--spacing-md);
+  font-size: var(--font-helper);
+}
+
+.bannerDanger {
+  background: var(--color-danger-background);
+  color: var(--color-danger);
+}
+
+.bannerWarning {
+  background: var(--color-warning-background);
+  color: #7a5b00;
+}
+
+.submitButton {
+  height: var(--touch-target);
+  border-radius: var(--radius-field);
+  border: none;
+  background: var(--color-primary);
+  color: var(--color-surface);
+  font-size: var(--font-body);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.submitButton:disabled {
+  background: var(--color-disabled-background);
+  color: var(--color-text-secondary);
+  cursor: not-allowed;
+}

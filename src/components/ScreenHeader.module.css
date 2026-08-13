@@ -1,0 +1,70 @@
+.header {
+  background: var(--color-header-blue);
+  padding: var(--spacing-xl) var(--spacing-lg) var(--spacing-lg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+}
+
+.titles {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.title {
+  font-size: var(--font-screen-title);
+  font-weight: 700;
+  color: var(--color-primary-dark);
+  margin: 0;
+}
+
+.subtitle {
+  font-size: var(--font-helper);
+  color: var(--color-primary-dark);
+  opacity: 0.85;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.backButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--touch-target);
+  height: var(--touch-target);
+  border-radius: var(--radius-field);
+  border: none;
+  background: rgba(255, 255, 255, 0.4);
+  color: var(--color-primary-dark);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.backButton:hover {
+  background: rgba(255, 255, 255, 0.65);
+}
+
+.logoutButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  height: var(--touch-target);
+  padding: 0 var(--spacing-md);
+  border-radius: var(--radius-field);
+  border: none;
+  background: rgba(255, 255, 255, 0.4);
+  color: var(--color-primary-dark);
+  font-size: var(--font-helper);
+  font-weight: 600;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.logoutButton:hover {
+  background: rgba(255, 255, 255, 0.65);
+}

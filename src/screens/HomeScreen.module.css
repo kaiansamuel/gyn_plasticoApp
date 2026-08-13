@@ -1,0 +1,29 @@
+.page {
+  min-height: 100vh;
+  background: var(--color-background);
+}
+
+.content {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: var(--spacing-xl) var(--spacing-lg);
+}
+
+.sectionTitle {
+  font-size: var(--font-section-title);
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0 0 4px;
+}
+
+.sectionSubtitle {
+  font-size: var(--font-helper);
+  color: var(--color-text-secondary);
+  margin: 0 0 var(--spacing-lg);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-md);
+}

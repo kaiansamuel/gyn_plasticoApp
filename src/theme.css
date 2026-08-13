@@ -1,0 +1,37 @@
+:root {
+  --color-primary: #176b87;
+  --color-primary-dark: #0e4f66;
+  --color-primary-soft: #e8f5f8;
+  --color-header-blue: #74c4e4;
+  --color-selection-cyan: #38d9d9;
+  --color-background: #f3f5f7;
+  --color-surface: #ffffff;
+  --color-border: #d1d5db;
+  --color-disabled-background: #e5e7eb;
+  --color-text-primary: #1f2937;
+  --color-text-secondary: #6b7280;
+  --color-success: #2e8b57;
+  --color-danger: #c0392b;
+  --color-danger-background: #fdecec;
+  --color-warning: #eab308;
+  --color-warning-background: #fff4a3;
+
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+  --spacing-xl: 24px;
+  --spacing-xxl: 32px;
+
+  --radius-field: 8px;
+  --radius-card: 12px;
+
+  --font-screen-title: 24px;
+  --font-section-title: 18px;
+  --font-body: 16px;
+  --font-helper: 14px;
+  --font-caption: 12px;
+  --font-monetary: 20px;
+
+  --touch-target: 48px;
+}

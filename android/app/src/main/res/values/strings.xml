@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">SigeApp</string>
+    <string name="title_activity_main">SigeApp</string>
+    <string name="package_name">br.com.sigeapp.pravoce</string>
+    <string name="custom_url_scheme">br.com.sigeapp.pravoce</string>
+</resources>
