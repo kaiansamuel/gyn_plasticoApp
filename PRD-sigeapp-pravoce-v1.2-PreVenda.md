@@ -355,10 +355,10 @@ Durante desenvolvimento, usar configuração por ambiente.
 Exemplo:
 
 ```env
-VITE_API_URL=http://localhost:3000/api/v1
+VITE_API_URL=http://g5.no-ip.info:3000/api/v1
 ```
 
-Para APK de homologação/produção, usar a URL pública definida depois da publicação da API.
+Para APK de homologação/produção, usar a URL pública oficial da API.
 
 Não gravar IP local fixo diretamente no código fonte.
 
