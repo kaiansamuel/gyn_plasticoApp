@@ -44,6 +44,25 @@ export type PreVendaForm = {
 
 export type PreVendaStep = 'cliente' | 'condicoes' | 'produtos' | 'carrinho' | 'revisao' | 'sucesso';
 
+export function formatarValorMonetario(valor: number) {
+  return valor.toLocaleString('pt-BR', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+}
+
+export function parseValorMonetario(valor: string): number | null {
+  const texto = valor.trim();
+  const usaVirgula = texto.includes(',');
+  const formatoValido = usaVirgula
+    ? /^(?:\d{1,3}(?:\.\d{3})+|\d+)(?:,\d{1,2})?$/.test(texto)
+    : /^\d+(?:\.\d{1,2})?$/.test(texto);
+  if (!formatoValido) return null;
+
+  const numero = Number(usaVirgula ? texto.replaceAll('.', '').replace(',', '.') : texto);
+  return Number.isFinite(numero) && numero > 0 ? numero : null;
+}
+
 export function calcularItem(item: Pick<ItemPreVenda, 'quantidade' | 'valorUnitario' | 'percentualDesconto'>) {
   const bruto = item.quantidade * item.valorUnitario;
   const desconto = bruto * (item.percentualDesconto / 100);
