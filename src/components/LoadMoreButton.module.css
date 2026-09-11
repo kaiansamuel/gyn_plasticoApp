@@ -1,0 +1,2 @@
+.footer { display: flex; flex-direction: column; align-items: center; gap: var(--spacing-md); padding: var(--spacing-lg); }
+.count { margin: 0; font-size: var(--font-helper); color: var(--color-text-secondary); }

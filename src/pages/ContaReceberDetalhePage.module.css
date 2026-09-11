@@ -1,0 +1,9 @@
+.page { min-height: 100%; background-color: var(--color-background); }
+.content { padding: var(--spacing-lg); }
+.topRow { display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-md); }
+.pedido { font-size: var(--font-section-title); font-weight: 700; color: var(--color-text-primary); }
+.valor { display: block; margin-top: var(--spacing-sm); font-size: 28px; font-weight: 800; color: var(--color-primary-dark); }
+.detailList { margin: var(--spacing-lg) 0 0; }
+.detailRow { display: flex; justify-content: space-between; gap: var(--spacing-md); padding: var(--spacing-sm) 0; border-top: 1px solid var(--color-border); }
+.detailRow dt { color: var(--color-text-secondary); font-size: var(--font-helper); }
+.detailRow dd { margin: 0; color: var(--color-text-primary); font-size: var(--font-body); font-weight: 600; text-align: right; }

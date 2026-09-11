@@ -4,6 +4,7 @@ import { getApiUrl } from '../config';
 type RequestOptions = {
   body?: unknown;
   method?: 'GET' | 'POST';
+  params?: Record<string, boolean | number | string | readonly string[] | undefined>;
   signal?: AbortSignal;
   token?: string;
 };
@@ -24,9 +25,19 @@ export class ApiError extends Error {
 
 export async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
   let response: Response;
+  const url = new URL(`${getApiUrl()}${path}`);
+
+  for (const [key, value] of Object.entries(options.params ?? {})) {
+    if (value === undefined) continue;
+    if (Array.isArray(value)) {
+      for (const item of value) url.searchParams.append(key, item);
+    } else {
+      url.searchParams.set(key, String(value));
+    }
+  }
 
   try {
-    response = await fetch(`${getApiUrl()}${path}`, {
+    response = await fetch(url, {
       body: options.body === undefined ? undefined : JSON.stringify(options.body),
       headers: {
         Accept: 'application/json',

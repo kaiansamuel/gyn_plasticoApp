@@ -1,10 +1,13 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { ProtectedRoute } from './routes/ProtectedRoute';
+import { ClientesPage } from './pages/ClientesPage';
+import { ContaReceberDetalhePage } from './pages/ContaReceberDetalhePage';
+import { ContasReceberPage } from './pages/ContasReceberPage';
+import { EstoquesPage } from './pages/EstoquesPage';
+import { VendasPage } from './pages/VendasPage';
 import { HomeScreen } from './screens/HomeScreen';
 import { LoginScreen } from './screens/LoginScreen';
-import { ModulePlaceholderScreen } from './screens/ModulePlaceholderScreen';
 import { PreVendaScreen } from './screens/PreVendaScreen';
-import { SalesScreen } from './screens/SalesScreen';
 
 export function App() {
   return (
@@ -22,7 +25,7 @@ export function App() {
         path="/vendas"
         element={
           <ProtectedRoute>
-            <SalesScreen />
+            <VendasPage />
           </ProtectedRoute>
         }
       />
@@ -38,26 +41,36 @@ export function App() {
         path="/clientes"
         element={
           <ProtectedRoute>
-            <ModulePlaceholderScreen title="Clientes" />
+            <ClientesPage />
           </ProtectedRoute>
         }
       />
       <Route
-        path="/estoque"
+        path="/estoques"
         element={
           <ProtectedRoute>
-            <ModulePlaceholderScreen title="Estoque" />
+            <EstoquesPage />
           </ProtectedRoute>
         }
       />
       <Route
-        path="/contas-a-receber"
+        path="/contas-receber"
         element={
           <ProtectedRoute>
-            <ModulePlaceholderScreen title="Contas a receber" />
+            <ContasReceberPage />
           </ProtectedRoute>
         }
       />
+      <Route
+        path="/contas-receber/:numeroPedido/:parcela"
+        element={
+          <ProtectedRoute>
+            <ContaReceberDetalhePage />
+          </ProtectedRoute>
+        }
+      />
+      <Route path="/estoque" element={<Navigate to="/estoques" replace />} />
+      <Route path="/contas-a-receber" element={<Navigate to="/contas-receber" replace />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

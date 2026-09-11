@@ -1,0 +1,20 @@
+.page { min-height: 100%; background-color: var(--color-background); }
+.filters { display: flex; flex-wrap: wrap; gap: var(--spacing-md); padding: var(--spacing-lg); background-color: var(--color-surface); border-bottom: 1px solid var(--color-border); }
+.field { display: flex; flex-direction: column; gap: var(--spacing-xs); flex: 1 1 160px; min-width: 0; }
+.field label { font-size: var(--font-caption); font-weight: 600; color: var(--color-text-secondary); }
+.field input, .field select { min-height: var(--touch-target); padding: 0 var(--spacing-md); border: 1px solid var(--color-border); border-radius: var(--radius-field); font-size: var(--font-body); color: var(--color-text-primary); background-color: var(--color-surface); }
+.statusField { flex-basis: 240px; }
+.statusField select { min-height: 144px; padding: var(--spacing-sm); }
+.fieldHelp { font-size: var(--font-caption); color: var(--color-text-secondary); }
+.checkboxField { display: flex; align-items: center; gap: var(--spacing-sm); flex: 1 1 100%; }
+.filterActions { display: flex; align-items: flex-end; flex: 1 1 120px; }
+.filterActions button { width: 100%; min-height: var(--touch-target); padding: 0 var(--spacing-lg); background-color: var(--color-primary); color: var(--color-surface); border: none; border-radius: var(--radius-field); font-size: var(--font-body); font-weight: 700; }
+.list { display: flex; flex-direction: column; gap: var(--spacing-md); padding: var(--spacing-lg); margin: 0; list-style: none; }
+.item { display: flex; flex-direction: column; gap: var(--spacing-sm); padding: var(--spacing-lg); background-color: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-card); box-shadow: 0 2px 4px rgb(14 79 102 / 8%); text-decoration: none; color: inherit; }
+.itemTopRow { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--spacing-md); }
+.itemPrimary { font-size: var(--font-body); font-weight: 700; color: var(--color-text-primary); }
+.itemValue { font-size: var(--font-monetary); font-weight: 700; color: var(--color-primary-dark); white-space: nowrap; }
+.itemLine { font-size: var(--font-helper); color: var(--color-text-secondary); }
+.itemStatus { align-self: flex-start; padding: var(--spacing-xs) var(--spacing-sm); border-radius: 999px; background-color: var(--color-primary-soft); color: var(--color-primary-dark); font-size: var(--font-caption); font-weight: 700; }
+.itemMetaRow { display: flex; justify-content: space-between; gap: var(--spacing-md); font-size: var(--font-caption); color: var(--color-text-secondary); }
+.newSale { width: calc(100% - 2 * var(--spacing-lg)); margin: var(--spacing-lg) var(--spacing-lg) 0; display: flex; align-items: center; justify-content: center; gap: var(--spacing-sm); min-height: var(--touch-target); border: 1px solid var(--color-primary); border-radius: var(--radius-field); background: var(--color-primary-soft); color: var(--color-primary-dark); font-size: var(--font-body); font-weight: 700; }

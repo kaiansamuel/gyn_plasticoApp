@@ -8,8 +8,8 @@ import styles from './HomeScreen.module.css';
 const modules = [
   { path: '/vendas', title: 'Vendas', description: 'Pedidos e valores vendidos', icon: ShoppingCart },
   { path: '/clientes', title: 'Clientes', description: 'Cadastro e contatos', icon: Users },
-  { path: '/estoque', title: 'Estoque', description: 'Produtos e disponibilidade', icon: Boxes },
-  { path: '/contas-a-receber', title: 'Contas a receber', description: 'Parcelas e vencimentos', icon: ReceiptText },
+  { path: '/estoques', title: 'Estoque', description: 'Produtos e disponibilidade', icon: Boxes },
+  { path: '/contas-receber', title: 'Contas a receber', description: 'Parcelas e vencimentos', icon: ReceiptText },
 ];
 
 export function HomeScreen() {

@@ -1,6 +1,6 @@
 .page { min-height: 100%; }
 .content { max-width: 720px; margin: 0 auto; padding: var(--spacing-lg) var(--spacing-xl) 40px; }
-.demoBanner, .integrationNotice { padding: var(--spacing-md); border-radius: var(--radius-field); color: #7a5b00; background: var(--color-warning-background); font-size: var(--font-helper); }
+.integrationNotice { padding: var(--spacing-md); border-radius: var(--radius-field); color: #7a5b00; background: var(--color-warning-background); font-size: var(--font-helper); }
 .stepper { display: flex; justify-content: space-between; gap: 4px; margin: 20px 0 28px; overflow-x: auto; }
 .stepper span { display: grid; justify-items: center; gap: 5px; min-width: 55px; color: var(--color-text-secondary); font-size: 11px; white-space: nowrap; }
 .stepper b { display: grid; place-items: center; width: 28px; height: 28px; border: 1px solid var(--color-border); border-radius: 50%; font-size: 12px; font-weight: 500; }
