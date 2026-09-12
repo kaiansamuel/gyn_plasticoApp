@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { ArrowLeft, ArrowRight, Check, ChevronLeft, LoaderCircle, Minus, Plus, Send, Trash2 } from 'lucide-react';
-import { useMemo, useState, type ReactNode } from 'react';
+import { useMemo, useRef, useState, type ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/auth-context';
 import { ApiError } from '../api/client';
@@ -33,6 +33,7 @@ export function PreVendaScreen() {
   const [payload, setPayload] = useState<CriarPreVendaPayload | null>(null);
   const [enviando, setEnviando] = useState(false);
   const [numeroCriado, setNumeroCriado] = useState<number | null>(null);
+  const envioEmAndamentoRef = useRef(false);
   const totais = useMemo(() => calcularTotais(form.itens), [form.itens]);
   const clienteQuery = useQuery({ queryKey: ['pre-venda', 'clientes', clienteBusca], queryFn: ({ signal }) => fetchClientes(token!, { busca: clienteBusca, limit: 20 }, signal), enabled: Boolean(token) && step === 'cliente' });
   const produtoQuery = useQuery({ queryKey: ['pre-venda', 'produtos', produtoBusca], queryFn: ({ signal }) => fetchProdutos(token!, produtoBusca.match(/^\d+$/) ? { produto: Number(produtoBusca), somenteComEstoque: true, limit: 20 } : { descricao: produtoBusca, somenteComEstoque: true, limit: 20 }, signal), enabled: Boolean(token) && step === 'produtos' && Boolean(produtoBusca.trim()) });
@@ -62,7 +63,11 @@ export function PreVendaScreen() {
   }
   function selectProduto(produto: Produto) {
     setProdutoSelecionado(produto);
-    setPrecoUnitario(formatarValorMonetario(produto.valorUnitario));
+    setPrecoUnitario(Number.isFinite(produto.valorUnitario) && produto.valorUnitario > 0 ? formatarValorMonetario(produto.valorUnitario) : '');
+    setMensagem('');
+  }
+  function changeQuantidade(delta: number) {
+    setQuantidade((current) => Math.max(1, current + delta));
     setMensagem('');
   }
   function addItem() {
@@ -106,23 +111,32 @@ export function PreVendaScreen() {
     };
   }
   async function sendPreVenda() {
-    if (enviando) return;
+    if (envioEmAndamentoRef.current) return;
     setMensagem('');
     if (hasInvalidPriceItem(form.itens)) { setMensagem(PRECO_INVALIDO_MESSAGE); return; }
     const nextPayload = buildPayload();
     if (!nextPayload) { setMensagem('Revise cliente, pagamento, parcela e vendedor antes de enviar.'); return; }
     if (!token) { setMensagem('Sessão expirada. Faça login novamente para enviar a pré-venda.'); return; }
 
+    envioEmAndamentoRef.current = true;
     setEnviando(true);
     try {
-      const response = await createPreVenda(token, nextPayload);
-      setPayload(nextPayload);
-      setNumeroCriado(response.numero);
-      setMensagem(`Pré-venda criada com sucesso. Número: ${response.numero}`);
+      await createPreVenda(token, nextPayload);
+      setStep('cliente');
+      setForm({ cliente: null, formaPagamento: null, parcelaCodigo: null, observacao: '', vendedorCodigo: usuario.vendedor.codigo, vendedor: null, itens: [] });
+      setClienteBusca('');
+      setProdutoBusca('');
+      setProdutoSelecionado(null);
+      setPrecoUnitario('');
+      setQuantidade(1);
+      setMensagem('');
+      setPayload(null);
+      setNumeroCriado(null);
+      navigate('/', { replace: true });
     } catch (error) {
       setNumeroCriado(null);
       setMensagem(error instanceof ApiError ? error.message : 'Não foi possível enviar a pré-venda. Tente novamente.');
-    } finally {
+      envioEmAndamentoRef.current = false;
       setEnviando(false);
     }
   }
@@ -136,7 +150,7 @@ export function PreVendaScreen() {
         <nav className={styles.stepper} aria-label="Etapas da pré-venda">{steps.map((item, index) => <span key={item.id} className={index <= stepIndex ? styles.stepActive : ''}><b>{index + 1}</b>{item.label}</span>)}</nav>
         {step === 'cliente' ? <section><SectionTitle title="Escolha o cliente" subtitle="Pesquise por código ou nome real na API." /><SearchInput value={clienteBusca} onChange={setClienteBusca} placeholder="Buscar cliente" />{clienteQuery.isLoading ? <Loading /> : clienteQuery.isError ? <ErrorMessage message={errorText(clienteQuery.error)} /> : <Results>{clienteResultados.map((cliente) => <button type="button" key={cliente.codigo} className={`${styles.result} ${form.cliente?.codigo === cliente.codigo ? styles.selected : ''}`} onClick={() => selectCliente(cliente)}><span><strong>{cliente.nome}</strong><small>Código {cliente.codigo}{cliente.cidade ? ` · ${cliente.cidade}` : ''}</small></span>{form.cliente?.codigo === cliente.codigo ? <Check size={20} /> : null}</button>)}</Results>}</section> : null}
         {step === 'condicoes' ? <section><SectionTitle title="Condições da pré-venda" subtitle="A filial vem da sessão autenticada." /><InfoGrid><Info label="Cliente" value={`${form.cliente?.codigo} · ${form.cliente?.nome}`} /><Info label="Filial" value={`${usuario.filial.codigo} · ${usuario.filial.nome}`} /></InfoGrid>{usuario.vendedor.codigo > 0 ? <InfoGrid><Info label="Vendedor" value={`${usuario.vendedor.codigo} · ${usuario.vendedor.nome ?? 'Vendedor vinculado'}`} /></InfoGrid> : <><label className={styles.label} htmlFor="vendedor">Vendedor</label><select id="vendedor" className={styles.input} value={form.vendedor?.codigo ?? ''} onChange={(event) => setForm((current) => ({ ...current, vendedor: vendedores.find((vendedor) => vendedor.codigo === Number(event.target.value)) ?? null, vendedorCodigo: Number(event.target.value) || 0 }))}><option value="">Selecione</option>{vendedores.map((vendedor) => <option key={vendedor.codigo} value={vendedor.codigo}>{vendedor.codigo} · {vendedor.nomeCompleto ?? vendedor.descricao}</option>)}</select>{vendedoresQuery.isLoading ? <Loading /> : vendedoresQuery.isError ? <ErrorMessage message={errorText(vendedoresQuery.error)} /> : null}</>}<label className={styles.label} htmlFor="forma">Forma de pagamento</label>{formasQuery.isLoading ? <Loading /> : formasQuery.isError ? <ErrorMessage message={errorText(formasQuery.error)} /> : <select id="forma" className={styles.input} value={form.formaPagamento?.codigo ?? ''} onChange={(event) => selectFormaPagamento(Number(event.target.value))}><option value="">Selecione</option>{formas.map((forma) => <option key={forma.codigo} value={forma.codigo}>{forma.descricao}</option>)}</select>}{form.formaPagamento?.exigeParcela ? <><label className={styles.label} htmlFor="parcela">Parcela</label>{parcelasQuery.isLoading ? <Loading /> : parcelasQuery.isError ? <ErrorMessage message={errorText(parcelasQuery.error)} /> : <select id="parcela" className={styles.input} value={form.parcelaCodigo ?? ''} onChange={(event) => setForm((current) => ({ ...current, parcelaCodigo: Number(event.target.value) || null }))} required><option value="">Selecione</option>{parcelas.map((parcela) => <option key={parcela.codigo} value={parcela.codigo}>{parcela.descricao}</option>)}</select>}</> : form.formaPagamento ? <p className={styles.helperMessage}>Esta forma não exige parcela. Será enviado <code>parcelaCodigo=0</code>.</p> : null}<label className={styles.label} htmlFor="observacao">Observação <small>(opcional)</small></label><textarea id="observacao" className={styles.input} rows={3} value={form.observacao} onChange={(event) => setForm((current) => ({ ...current, observacao: event.target.value }))} placeholder="Digite uma observação" /></section> : null}
-        {step === 'produtos' ? <section><SectionTitle title="Adicione os produtos" subtitle="Preço inicial e estoque vêm da API." /><SearchInput value={produtoBusca} onChange={(value) => { setProdutoBusca(value); setProdutoSelecionado(null); setPrecoUnitario(''); }} placeholder="Buscar produto por código ou descrição" />{produtoQuery.isLoading ? <Loading /> : produtoQuery.isError ? <ErrorMessage message={errorText(produtoQuery.error)} /> : <Results>{produtoResultados.map((produto) => <button type="button" key={`${produto.codigo}-${produto.filialNome}`} className={`${styles.result} ${produtoSelecionado?.codigo === produto.codigo ? styles.selected : ''}`} onClick={() => selectProduto(produto)}><span><strong>{produto.descricao}</strong><small>Código {produto.codigo} · {currency.format(produto.valorUnitario)} · Estoque {produto.estoqueAtual} {produto.unidade ?? ''}</small></span>{produtoSelecionado?.codigo === produto.codigo ? <Check size={20} /> : null}</button>)}</Results>}{produtoSelecionado ? <div className={styles.itemEditor}><strong>{produtoSelecionado.descricao}</strong><div className={styles.editorRow}><label className={styles.label} htmlFor="quantidade">Quantidade<input id="quantidade" className={styles.input} type="number" min="1" value={quantidade} onChange={(event) => setQuantidade(Number(event.target.value))} /></label><label className={styles.label} htmlFor="precoUnitario">Preço unitário<input id="precoUnitario" className={styles.input} type="text" inputMode="decimal" value={precoUnitario} onChange={(event) => { setPrecoUnitario(event.target.value); setMensagem(''); }} aria-invalid={precoUnitario !== '' && valorUnitario === null} /></label></div><p className={styles.itemTotal}>Total: {valorUnitario === null || !quantidadeValida ? '—' : currency.format(calcularItem({ quantidade, valorUnitario, percentualDesconto: 0 }).total)}</p><button type="button" className={styles.primaryButton} onClick={addItem}><Plus size={18} /> Adicionar item</button></div> : null}</section> : null}
+        {step === 'produtos' ? <section><SectionTitle title="Adicione os produtos" subtitle="Preço inicial e estoque vêm da API." /><SearchInput value={produtoBusca} onChange={(value) => { setProdutoBusca(value); setProdutoSelecionado(null); setPrecoUnitario(''); }} placeholder="Buscar produto por código ou descrição" />{produtoQuery.isLoading ? <Loading /> : produtoQuery.isError ? <ErrorMessage message={errorText(produtoQuery.error)} /> : <Results>{produtoResultados.map((produto) => <button type="button" key={`${produto.codigo}-${produto.filialNome}`} className={`${styles.result} ${produtoSelecionado?.codigo === produto.codigo ? styles.selected : ''}`} onClick={() => selectProduto(produto)}><span><strong>{produto.descricao}</strong><small>Código {produto.codigo} · {currency.format(produto.valorUnitario)} · Estoque {produto.estoqueAtual} {produto.unidade ?? ''}</small></span>{produtoSelecionado?.codigo === produto.codigo ? <Check size={20} /> : null}</button>)}</Results>}{produtoSelecionado ? <div className={styles.itemEditor}><strong>{produtoSelecionado.descricao}</strong><div className={styles.editorRow}><div className={styles.label}><label htmlFor="quantidade">Quantidade</label><div className={styles.quantityControl}><button type="button" aria-label="Diminuir quantidade" onClick={() => changeQuantidade(-1)} disabled={quantidade <= 1}><Minus size={16} /></button><input id="quantidade" className={styles.input} type="number" min="1" step="any" value={quantidade} onChange={(event) => { const nextQuantidade = Number(event.target.value); if (Number.isFinite(nextQuantidade) && nextQuantidade >= 1) setQuantidade(nextQuantidade); setMensagem(''); }} /><button type="button" aria-label="Aumentar quantidade" onClick={() => changeQuantidade(1)}><Plus size={16} /></button></div></div><label className={styles.label} htmlFor="precoUnitario">Preço unitário<input id="precoUnitario" className={styles.input} type="text" inputMode="decimal" value={precoUnitario} onChange={(event) => { setPrecoUnitario(event.target.value); setMensagem(''); }} aria-invalid={precoUnitario !== '' && valorUnitario === null} /></label></div><p className={styles.itemTotal}>Total: {valorUnitario === null || !quantidadeValida ? '—' : currency.format(calcularItem({ quantidade, valorUnitario, percentualDesconto: 0 }).total)}</p><button type="button" className={styles.primaryButton} onClick={addItem}><Plus size={18} /> Adicionar item</button></div> : null}</section> : null}
         {step === 'carrinho' ? <section><SectionTitle title="Itens da pré-venda" subtitle="Revise quantidades e remova itens antes da revisão." />{form.itens.map((item) => <article className={styles.cartItem} key={item.codigo}><div><strong>{item.descricao}</strong><small>{item.codigo} · {item.quantidade} × {currency.format(item.valorUnitario)} · desconto {item.percentualDesconto}%</small></div><div className={styles.cartActions}><button type="button" aria-label={`Diminuir quantidade de ${item.descricao}`} onClick={() => updateQuantity(item, -1)}><Minus size={16} /></button><b>{item.quantidade}</b><button type="button" aria-label={`Aumentar quantidade de ${item.descricao}`} onClick={() => updateQuantity(item, 1)}><Plus size={16} /></button><button type="button" aria-label={`Remover ${item.descricao}`} className={styles.deleteButton} onClick={() => removeItem(item.codigo)}><Trash2 size={17} /></button></div><strong className={styles.lineTotal}>{currency.format(calcularItem(item).total)}</strong></article>)}<Totals totals={totais} /></section> : null}
         {step === 'revisao' ? <section><SectionTitle title="Revise antes de enviar" subtitle="Confira os dados e visualize o payload final." /><ReviewRow label="Cliente" value={`${form.cliente?.codigo} · ${form.cliente?.nome}`} /><ReviewRow label="Vendedor" value={selectedSeller ? `${selectedSeller.codigo} · ${selectedSeller.nomeCompleto ?? selectedSeller.descricao}` : 'Não selecionado'} /><ReviewRow label="Filial" value={`${usuario.filial.codigo} · ${usuario.filial.nome}`} /><ReviewRow label="Pagamento" value={`${form.formaPagamento?.descricao ?? 'Não selecionado'}${form.formaPagamento?.exigeParcela ? ` · ${parcelas.find((item) => item.codigo === form.parcelaCodigo)?.descricao ?? 'Parcela não selecionada'}` : ' · sem parcela'}`} /><ReviewRow label="Observação" value={form.observacao || 'Não informada'} /><Totals totals={totais} /><div className={styles.integrationNotice}>O botão abaixo enviará a pré-venda para a API usando a sessão autenticada.</div>{payload ? <div className={styles.payloadPreview}><strong>Payload enviado</strong><pre>{JSON.stringify(payload, null, 2)}</pre></div> : null}</section> : null}
         {mensagem ? <p className={numeroCriado !== null ? styles.successMessage : styles.errorMessage} role="status">{mensagem}</p> : null}
