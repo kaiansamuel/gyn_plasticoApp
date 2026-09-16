@@ -28,6 +28,7 @@ export type EstoqueConsulta = {
   descricao: string;
   unidade: string | null;
   precoVenda: number;
+  origemPreco?: 'TABELA_CLIENTE' | 'ESTOQUE';
   estoqueAtual: number;
   filialNome: string;
 };
@@ -71,6 +72,7 @@ type BaseQuery = { limit?: number; page?: number };
 
 export type ClientesQuery = BaseQuery & { busca?: string; cidade?: number };
 export type EstoquesQuery = BaseQuery & {
+  clienteCodigo?: number;
   descricao?: string;
   produto?: number;
   somenteComEstoque?: boolean;

@@ -15,6 +15,7 @@ export type Produto = {
   estoqueAtual: number;
   filialNome: string;
   valorUnitario: number;
+  origemPreco?: 'TABELA_CLIENTE' | 'ESTOQUE';
 };
 
 export type CondicaoPagamento = {
