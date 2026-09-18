@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { ProtectedRoute } from './routes/ProtectedRoute';
 import { ClientesPage } from './pages/ClientesPage';
+import { ClienteDetalhePage } from './pages/ClienteDetalhePage';
 import { ContaReceberDetalhePage } from './pages/ContaReceberDetalhePage';
 import { ContasReceberPage } from './pages/ContasReceberPage';
 import { EstoquesPage } from './pages/EstoquesPage';
@@ -42,6 +43,14 @@ export function App() {
         element={
           <ProtectedRoute>
             <ClientesPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/clientes/:codigo"
+        element={
+          <ProtectedRoute>
+            <ClienteDetalhePage />
           </ProtectedRoute>
         }
       />
