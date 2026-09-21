@@ -7,3 +7,14 @@
 .detailRow:last-child { padding-bottom: 0; }
 .detailRow dt { color: var(--color-text-secondary); font-size: var(--font-helper); }
 .detailRow dd { margin: 0; color: var(--color-text-primary); font-size: var(--font-body); font-weight: 600; overflow-wrap: anywhere; }
+.phoneList { margin: 0; padding: 0; list-style: none; }
+.phoneItem { display: flex; align-items: center; gap: var(--spacing-md); padding: var(--spacing-md) 0; border-top: 1px solid var(--color-border); }
+.phoneItem:first-child { padding-top: 0; border-top: 0; }
+.phoneItem:last-child { padding-bottom: 0; }
+.phoneContent { display: flex; flex: 1; min-width: 0; flex-direction: column; gap: var(--spacing-xs); }
+.phoneNumber { color: var(--color-text-primary); font-size: var(--font-body); font-weight: 600; overflow-wrap: anywhere; }
+.phoneContact { color: var(--color-text-secondary); font-size: var(--font-helper); overflow-wrap: anywhere; }
+.callAction { display: inline-flex; flex: none; align-items: center; justify-content: center; gap: var(--spacing-xs); min-height: var(--touch-target); padding: 0 var(--spacing-md); border-radius: var(--radius-field); color: var(--color-primary-dark); font-size: var(--font-helper); font-weight: 700; text-decoration: none; }
+.callAction:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+.callAction:active { background-color: var(--color-primary-soft); }
+.emptyPhones { margin: 0; color: var(--color-text-secondary); font-size: var(--font-helper); }

@@ -12,6 +12,14 @@ export type PaginatedResponse<T> = {
   meta: PaginationMeta;
 };
 
+export type TelefoneCliente = {
+  sequencia: number;
+  ddd: string | null;
+  numero: string;
+  tipo: string | null;
+  contato: string | null;
+};
+
 export type ClienteConsulta = {
   clienteCodigo: number;
   cnpjCpf: string | null;
@@ -20,6 +28,7 @@ export type ClienteConsulta = {
   endereco: string | null;
   bairro: string | null;
   cidade: string | null;
+  telefones: TelefoneCliente[];
 };
 export type ClientesResponse = PaginatedResponse<ClienteConsulta>;
 
