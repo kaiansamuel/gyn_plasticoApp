@@ -14,6 +14,10 @@
 .clientLink { flex-direction: row; align-items: center; min-height: var(--touch-target); }
 .clientLink:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
 .clientContent { display: flex; flex: 1; min-width: 0; flex-direction: column; gap: var(--spacing-sm); }
+.clientHeading { display: flex; flex-wrap: wrap; align-items: center; gap: var(--spacing-sm); }
+.clientBadge { display: inline-flex; align-items: center; padding: var(--spacing-xs) var(--spacing-sm); border-radius: 999px; font-size: var(--font-caption); font-weight: 700; line-height: 1.2; }
+.blockedBadge { color: var(--color-danger); background: var(--color-danger-background); }
+.termRestrictionBadge { color: #7a5b00; background: var(--color-warning-background); }
 .clientChevron { flex: none; color: var(--color-primary); }
 .itemTopRow { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--spacing-md); }
 .itemPrimary { font-size: var(--font-body); font-weight: 700; color: var(--color-text-primary); }

@@ -2,9 +2,9 @@ import type { Cliente, CondicaoPagamento, Produto } from './types';
 
 // Dados temporários para permitir a validação visual enquanto os endpoints de consulta são definidos pela API.
 export const clientesDemo: Cliente[] = [
-  { codigo: 101, nome: 'Mercado São Paulo Ltda.', razaoSocial: null, cnpjCpf: null, endereco: null, bairro: null, cidade: null },
-  { codigo: 205, nome: 'Comercial Boa Compra', razaoSocial: null, cnpjCpf: null, endereco: null, bairro: null, cidade: null },
-  { codigo: 318, nome: 'Padaria Pão da Praça', razaoSocial: null, cnpjCpf: null, endereco: null, bairro: null, cidade: null },
+  { codigo: 101, bloqueado: false, bloqueiaVendaPrazo: false, nome: 'Mercado São Paulo Ltda.', razaoSocial: null, cnpjCpf: null, endereco: null, bairro: null, cidade: null },
+  { codigo: 205, bloqueado: false, bloqueiaVendaPrazo: false, nome: 'Comercial Boa Compra', razaoSocial: null, cnpjCpf: null, endereco: null, bairro: null, cidade: null },
+  { codigo: 318, bloqueado: false, bloqueiaVendaPrazo: false, nome: 'Padaria Pão da Praça', razaoSocial: null, cnpjCpf: null, endereco: null, bairro: null, cidade: null },
 ];
 
 export const produtosDemo: Produto[] = [

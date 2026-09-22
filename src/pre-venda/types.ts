@@ -1,5 +1,7 @@
 export type Cliente = {
   codigo: number;
+  bloqueado: boolean;
+  bloqueiaVendaPrazo: boolean;
   nome: string;
   razaoSocial: string | null;
   cnpjCpf: string | null;

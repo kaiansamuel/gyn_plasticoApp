@@ -22,6 +22,8 @@ export type TelefoneCliente = {
 
 export type ClienteConsulta = {
   clienteCodigo: number;
+  bloqueado: boolean;
+  bloqueiaVendaPrazo: boolean;
   cnpjCpf: string | null;
   nome: string;
   razaoSocial: string | null;

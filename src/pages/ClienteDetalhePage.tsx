@@ -1,5 +1,5 @@
 import { useQueryClient, type InfiniteData } from '@tanstack/react-query';
-import { Phone } from 'lucide-react';
+import { AlertTriangle, Phone } from 'lucide-react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { type ClientesResponse, type TelefoneCliente } from '../api/consultas';
 import { useAuth } from '../auth/auth-context';
@@ -21,6 +21,7 @@ export function ClienteDetalhePage() {
   return <div className={styles.page}>
     <ScreenHeader title="Detalhes do Cliente" subtitle={usuario?.filial.nome} onBack={() => navigate(`/clientes${location.search}`)} />
     {cliente ? <main className={styles.content}>
+      {cliente.bloqueado ? <div className={`${styles.clientStatus} ${styles.blockedStatus}`} role="status"><AlertTriangle size={20} aria-hidden="true" /><span>Cliente bloqueado para vendas</span></div> : cliente.bloqueiaVendaPrazo ? <div className={`${styles.clientStatus} ${styles.termRestrictionStatus}`} role="status"><AlertTriangle size={20} aria-hidden="true" /><span>Venda a prazo bloqueada</span></div> : null}
       <section aria-labelledby="dados-cliente">
         <h2 className={styles.sectionTitle} id="dados-cliente">Dados do cliente</h2>
         <Card><dl className={styles.details}>

@@ -7,6 +7,8 @@ export const apiErrorCodeSchema = z.enum([
   'NOT_FOUND',
   'RATE_LIMIT_EXCEEDED',
   'DATABASE_UNAVAILABLE',
+  'CLIENTE_BLOQUEADO',
+  'CLIENTE_BLOQUEADO_VENDA_PRAZO',
   'INTERNAL_ERROR',
 ]);
 

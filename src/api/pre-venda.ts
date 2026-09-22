@@ -15,7 +15,7 @@ function queryString(options: ListOptions) {
 }
 
 export async function fetchClientes(token: string, options: ListOptions = {}, signal?: AbortSignal): Promise<Paginated<Cliente>> {
-  const response = await request<Paginated<{ clienteCodigo: number; nome: string; razaoSocial: string | null; cnpjCpf: string | null; endereco: string | null; bairro: string | null; cidade: string | null }>>(`/clientes${queryString(options)}`, { token, signal });
+  const response = await request<Paginated<{ clienteCodigo: number; bloqueado: boolean; bloqueiaVendaPrazo: boolean; nome: string; razaoSocial: string | null; cnpjCpf: string | null; endereco: string | null; bairro: string | null; cidade: string | null }>>(`/clientes${queryString(options)}`, { token, signal });
   return { ...response, data: response.data.map((cliente) => ({ ...cliente, codigo: cliente.clienteCodigo })) };
 }
 
