@@ -6,6 +6,7 @@ export function ProtectedRoute({ children }: PropsWithChildren) {
   const { status } = useAuth();
   const location = useLocation();
 
+  if (status === 'loading') return null;
   if (status !== 'authenticated') {
     return <Navigate to="/login" replace state={{ from: location }} />;
   }

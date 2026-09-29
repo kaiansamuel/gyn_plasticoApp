@@ -1,9 +1,10 @@
 import type { LoginRequest, UsuarioAutenticado } from '../schemas/auth.schema';
-import { createContext, type PropsWithChildren, useCallback, useContext, useMemo, useState } from 'react';
-import { login as requestLogin } from '../api/auth';
+import { createContext, type PropsWithChildren, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { fetchCurrentUser, login as requestLogin } from '../api/auth';
+import { useQueryClient } from '@tanstack/react-query';
 
 type AuthState =
-  | { status: 'anonymous'; usuario: null; token: null }
+  | { status: 'loading' | 'anonymous'; usuario: null; token: null }
   | { status: 'authenticated'; usuario: UsuarioAutenticado; token: string };
 
 type AuthContextValue = AuthState & {
@@ -14,15 +15,33 @@ type AuthContextValue = AuthState & {
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: PropsWithChildren) {
-  const [state, setState] = useState<AuthState>({ status: 'anonymous', usuario: null, token: null });
+  const queryClient = useQueryClient();
+  const [state, setState] = useState<AuthState>({ status: 'loading', usuario: null, token: null });
+
+  const logout = useCallback(() => {
+    localStorage.removeItem('gyn-plastico:access-token');
+    queryClient.clear();
+    setState({ status: 'anonymous', usuario: null, token: null });
+  }, [queryClient]);
+
+  useEffect(() => {
+    const token = localStorage.getItem('gyn-plastico:access-token');
+    const expired = () => logout();
+    window.addEventListener('gyn-plastico:session-expired', expired);
+    if (!token) {
+      setState({ status: 'anonymous', usuario: null, token: null });
+    } else {
+      void fetchCurrentUser(token).then((usuario) => {
+        setState({ status: 'authenticated', usuario, token });
+      }).catch(() => logout());
+    }
+    return () => window.removeEventListener('gyn-plastico:session-expired', expired);
+  }, [logout]);
 
   const login = useCallback(async (request: LoginRequest) => {
     const response = await requestLogin(request);
+    localStorage.setItem('gyn-plastico:access-token', response.accessToken);
     setState({ status: 'authenticated', usuario: response.usuario, token: response.accessToken });
-  }, []);
-
-  const logout = useCallback(() => {
-    setState({ status: 'anonymous', usuario: null, token: null });
   }, []);
 
   const value = useMemo<AuthContextValue>(() => ({ ...state, login, logout }), [login, logout, state]);

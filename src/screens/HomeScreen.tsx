@@ -1,4 +1,4 @@
-import { Boxes, ReceiptText, ShoppingCart, Users } from 'lucide-react';
+import { Boxes, ReceiptText, ShoppingCart, Users, ClipboardPlus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/auth-context';
 import { ModuleCard } from '../components/ModuleCard';
@@ -10,6 +10,7 @@ const modules = [
   { path: '/clientes', title: 'Clientes', description: 'Cadastro e contatos', icon: Users },
   { path: '/estoques', title: 'Estoque', description: 'Produtos e disponibilidade', icon: Boxes },
   { path: '/contas-receber', title: 'Contas a receber', description: 'Parcelas e vencimentos', icon: ReceiptText },
+  { path: '/vendas/nova-pre-venda', title: 'Pré-venda', description: 'Registrar uma nova pré-venda', icon: ClipboardPlus },
 ];
 
 export function HomeScreen() {

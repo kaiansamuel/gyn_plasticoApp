@@ -81,14 +81,14 @@ export function LoginScreen() {
   return (
     <div className={styles.page}>
       <div className={styles.brand}>
-        <span className={styles.brandMark}>SG</span>
+        <span className={styles.brandMark}>GP</span>
         <p className={styles.brandName}>Gyn Plástico</p>
         <p className={styles.brandTagline}>Acesso seguro ao seu ERP</p>
       </div>
 
       <div className={styles.card}>
         <p className={styles.cardTitle}>Entrar</p>
-        <p className={styles.cardSubtitle}>Use suas credenciais cadastradas no SIGE.</p>
+        <p className={styles.cardSubtitle}>Entre com seu usuário e senha.</p>
 
         <form className={styles.form} onSubmit={onSubmit} noValidate>
           {banner ? (

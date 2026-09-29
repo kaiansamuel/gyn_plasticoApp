@@ -18,8 +18,8 @@ const STATUS: ReadonlyArray<{ codigo: PedidoStatusCodigo; descricao: string }> =
   { codigo: 'O', descricao: 'Pedidos em digitação' }, { codigo: 'D', descricao: 'Outras Remessas' },
   { codigo: 'Z', descricao: 'Outras Remessas Canceladas' },
 ];
-type Filters = { cliente: string; dataFinal: string; dataInicial: string; pedido: string; status: PedidoStatusCodigo[]; vendedor: string };
-const defaultFilters = (): Filters => ({ cliente: '', dataFinal: today(), dataInicial: currentMonthStart(), pedido: '', status: ['A'], vendedor: '' });
+type Filters = { cliente: string; dataFinal: string; dataInicial: string; pedido: string; status: PedidoStatusCodigo | ''; vendedor: string };
+const defaultFilters = (): Filters => ({ cliente: '', dataFinal: today(), dataInicial: currentMonthStart(), pedido: '', status: 'A', vendedor: '' });
 
 export function VendasPage() {
   const navigate = useNavigate();
@@ -31,7 +31,7 @@ export function VendasPage() {
     getNextPageParam: (lastPage) => lastPage.meta.page < lastPage.meta.totalPages ? lastPage.meta.page + 1 : undefined,
     initialPageParam: 1,
     queryFn: ({ pageParam, signal }) => {
-      const params: VendasQuery = { cliente: applied.cliente.trim() || undefined, dataFinal: applied.dataFinal, dataInicial: applied.dataInicial, pedido: applied.pedido ? Number(applied.pedido) : undefined, status: applied.status, vendedor: applied.vendedor ? Number(applied.vendedor) : undefined, limit: PAGE_SIZE, page: pageParam as number };
+      const params: VendasQuery = { cliente: applied.cliente.trim() || undefined, dataFinal: applied.dataFinal || undefined, dataInicial: applied.dataInicial || undefined, pedido: applied.pedido ? Number(applied.pedido) : undefined, status: applied.status || undefined, vendedor: applied.vendedor ? Number(applied.vendedor) : undefined, limit: PAGE_SIZE, page: pageParam as number };
       return fetchVendas(token!, params, signal);
     },
     queryKey: ['vendas', applied],
@@ -47,8 +47,8 @@ export function VendasPage() {
       <div className={styles.field}><label htmlFor="dataFinal">Data final</label><input id="dataFinal" type="date" value={draft.dataFinal} onChange={(event) => setDraft((v) => ({ ...v, dataFinal: event.target.value }))} /></div>
       <div className={styles.field}><label htmlFor="pedido">Pedido</label><input id="pedido" inputMode="numeric" value={draft.pedido} onChange={(event) => setDraft((v) => ({ ...v, pedido: event.target.value }))} placeholder="Número do pedido" /></div>
       <div className={styles.field}><label htmlFor="cliente">Cliente</label><input id="cliente" value={draft.cliente} onChange={(event) => setDraft((v) => ({ ...v, cliente: event.target.value }))} placeholder="Nome do cliente" /></div>
-      {usuario?.vendedor.acessoTodos ? <div className={styles.field}><label htmlFor="vendedor">Vendedor</label><input id="vendedor" inputMode="numeric" value={draft.vendedor} onChange={(event) => setDraft((v) => ({ ...v, vendedor: event.target.value }))} placeholder="Código do vendedor" /></div> : null}
-      <div className={`${styles.field} ${styles.statusField}`}><label htmlFor="status">Status do pedido</label><select id="status" multiple value={draft.status} onChange={(event) => { const status = Array.from(event.target.selectedOptions, (option) => option.value as PedidoStatusCodigo); if (status.length) setDraft((v) => ({ ...v, status })); }}>{STATUS.map((option) => <option key={option.codigo} value={option.codigo}>{option.descricao}</option>)}</select><span className={styles.fieldHelp}>Use Ctrl ou toque para selecionar mais de um status.</span></div>
+      <div className={styles.field}><label htmlFor="vendedor">Vendedor (opcional)</label><input id="vendedor" inputMode="numeric" value={draft.vendedor} onChange={(event) => setDraft((v) => ({ ...v, vendedor: event.target.value }))} placeholder="Código do vendedor" /></div>
+      <div className={styles.field}><label htmlFor="status">Status do pedido</label><select id="status" value={draft.status} onChange={(event) => setDraft((v) => ({ ...v, status: event.target.value as Filters['status'] }))}><option value="">Todos</option>{STATUS.map((option) => <option key={option.codigo} value={option.codigo}>{option.descricao}</option>)}</select></div>
       <div className={styles.filterActions}><button type="submit">Filtrar</button></div>
     </form>
     {query.isPending ? <LoadingState message="Carregando vendas..." /> : null}

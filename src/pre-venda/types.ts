@@ -15,9 +15,12 @@ export type Produto = {
   descricao: string;
   unidade: string | null;
   estoqueAtual: number;
-  filialNome: string;
-  valorUnitario: number;
-  origemPreco?: 'TABELA_CLIENTE' | 'ESTOQUE';
+  filial: number;
+  precoVenda: number | null;
+  precoVenda1: number | null;
+  precoVenda2: number | null;
+  precoVenda3: number | null;
+  origemPreco: 'ESTOQUE';
 };
 
 export type CondicaoPagamento = {
@@ -32,6 +35,8 @@ export type Vendedor = { codigo: number; descricao: string; nomeCompleto: string
 
 export type ItemPreVenda = Produto & {
   quantidade: number;
+  valorUnitario: number;
+  precoSelecionado: number;
   percentualDesconto: number;
 };
 

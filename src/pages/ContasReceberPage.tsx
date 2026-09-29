@@ -26,7 +26,7 @@ export function ContasReceberPage() {
     getNextPageParam: (lastPage) => lastPage.meta.page < lastPage.meta.totalPages ? lastPage.meta.page + 1 : undefined,
     initialPageParam: 1,
     queryFn: ({ pageParam, signal }) => {
-      const params: ContasReceberQuery = { cliente: applied.cliente.trim() || undefined, pedido: applied.pedido ? Number(applied.pedido) : undefined, situacao: applied.situacao || undefined, vencimentoFinal: applied.vencimentoFinal, vencimentoInicial: applied.vencimentoInicial, vendedor: applied.vendedor ? Number(applied.vendedor) : undefined, limit: PAGE_SIZE, page: pageParam as number };
+      const params: ContasReceberQuery = { cliente: applied.cliente.trim() || undefined, pedido: applied.pedido ? Number(applied.pedido) : undefined, situacao: applied.situacao || undefined, vencimentoFinal: applied.vencimentoFinal || undefined, vencimentoInicial: applied.vencimentoInicial || undefined, vendedor: applied.vendedor ? Number(applied.vendedor) : undefined, limit: PAGE_SIZE, page: pageParam as number };
       return fetchContasReceber(token!, params, signal);
     },
     queryKey: ['contas-receber', applied],
@@ -42,7 +42,7 @@ export function ContasReceberPage() {
       <div className={styles.field}><label htmlFor="pedido">Pedido</label><input id="pedido" inputMode="numeric" value={draft.pedido} onChange={(event) => setDraft((v) => ({ ...v, pedido: event.target.value }))} placeholder="Número do pedido" /></div>
       <div className={styles.field}><label htmlFor="cliente">Cliente</label><input id="cliente" value={draft.cliente} onChange={(event) => setDraft((v) => ({ ...v, cliente: event.target.value }))} placeholder="Nome do cliente" /></div>
       <div className={styles.field}><label htmlFor="situacao">Situação</label><select id="situacao" value={draft.situacao} onChange={(event) => setDraft((v) => ({ ...v, situacao: event.target.value as Filters['situacao'] }))}><option value="">Todas</option><option value="ABERTA">Aberta</option><option value="VENCIDA">Vencida</option><option value="PAGA">Paga</option></select></div>
-      {usuario?.vendedor.acessoTodos ? <div className={styles.field}><label htmlFor="vendedor">Vendedor</label><input id="vendedor" inputMode="numeric" value={draft.vendedor} onChange={(event) => setDraft((v) => ({ ...v, vendedor: event.target.value }))} placeholder="Código do vendedor" /></div> : null}
+      <div className={styles.field}><label htmlFor="vendedor">Vendedor (opcional)</label><input id="vendedor" inputMode="numeric" value={draft.vendedor} onChange={(event) => setDraft((v) => ({ ...v, vendedor: event.target.value }))} placeholder="Código do vendedor" /></div>
       <div className={styles.filterActions}><button type="submit">Filtrar</button></div>
     </form>
     {query.isPending ? <LoadingState message="Carregando contas a receber..." /> : null}

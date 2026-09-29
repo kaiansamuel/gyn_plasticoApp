@@ -17,25 +17,28 @@ export function ClientesPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const { token, usuario } = useAuth();
   const busca = searchParams.get('busca') ?? '';
+  const cidade = searchParams.get('cidade') ?? '';
   const search = searchParams.toString();
   const [draft, setDraft] = useState(busca);
+  const [cidadeDraft, setCidadeDraft] = useState(cidade);
   const query = useInfiniteQuery<ClientesResponse>({
     enabled: Boolean(token),
     getNextPageParam: (lastPage) => lastPage.meta.page < lastPage.meta.totalPages ? lastPage.meta.page + 1 : undefined,
     initialPageParam: 1,
     queryFn: ({ pageParam, signal }) => {
-      const params: ClientesQuery = { busca: busca.trim() || undefined, limit: PAGE_SIZE, page: pageParam as number };
+      const params: ClientesQuery = { busca: busca.trim() || undefined, cidade: cidade.trim() || undefined, limit: PAGE_SIZE, page: pageParam as number };
       return fetchClientes(token!, params, signal);
     },
-    queryKey: ['clientes', token, busca],
+    queryKey: ['clientes', token, busca, cidade],
   });
   const clientes = query.data?.pages.flatMap((page) => page.data) ?? [];
   const total = query.data?.pages[0]?.meta.total ?? 0;
 
   return <div className={styles.page}>
     <ScreenHeader title="Clientes" subtitle={usuario?.filial.nome} onBack={() => navigate('/')} />
-    <form className={styles.filters} onSubmit={(event) => { event.preventDefault(); const value = draft.trim(); setSearchParams(value ? { busca: value } : {}); }}>
+    <form className={styles.filters} onSubmit={(event) => { event.preventDefault(); const params: Record<string, string> = {}; if (draft.trim()) params.busca = draft.trim(); if (cidadeDraft.trim()) params.cidade = cidadeDraft.trim(); setSearchParams(params); }}>
       <div className={styles.field}><label htmlFor="busca">Buscar</label><input id="busca" value={draft} onChange={(event) => setDraft(event.target.value)} placeholder="Nome, razão social ou CNPJ/CPF" /></div>
+      <div className={styles.field}><label htmlFor="cidade">Cidade</label><input id="cidade" value={cidadeDraft} onChange={(event) => setCidadeDraft(event.target.value)} placeholder="Cidade" /></div>
       <div className={styles.filterActions}><button type="submit">Filtrar</button></div>
     </form>
     {query.isPending ? <LoadingState message="Carregando clientes..." /> : null}

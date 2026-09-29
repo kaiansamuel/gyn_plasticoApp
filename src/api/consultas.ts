@@ -38,10 +38,13 @@ export type EstoqueConsulta = {
   codigoProduto: number;
   descricao: string;
   unidade: string | null;
-  precoVenda: number;
-  origemPreco?: 'TABELA_CLIENTE' | 'ESTOQUE';
+  precoVenda: number | null;
+  precoVenda1: number | null;
+  precoVenda2: number | null;
+  precoVenda3: number | null;
+  origemPreco: 'ESTOQUE';
   estoqueAtual: number;
-  filialNome: string;
+  filial: number;
 };
 export type EstoquesResponse = PaginatedResponse<EstoqueConsulta>;
 
@@ -81,7 +84,7 @@ export type ContaReceberDetalhe = ContaReceberConsulta & {
 
 type BaseQuery = { limit?: number; page?: number };
 
-export type ClientesQuery = BaseQuery & { busca?: string; cidade?: number };
+export type ClientesQuery = BaseQuery & { busca?: string; cidade?: string | number };
 export type EstoquesQuery = BaseQuery & {
   clienteCodigo?: number;
   descricao?: string;
@@ -90,18 +93,18 @@ export type EstoquesQuery = BaseQuery & {
 };
 export type VendasQuery = BaseQuery & {
   cliente?: string;
-  dataFinal: string;
-  dataInicial: string;
+  dataFinal?: string;
+  dataInicial?: string;
   pedido?: number;
-  status?: readonly PedidoStatusCodigo[];
+  status?: PedidoStatusCodigo;
   vendedor?: number;
 };
 export type ContasReceberQuery = BaseQuery & {
   cliente?: string;
   pedido?: number;
   situacao?: SituacaoContaReceber;
-  vencimentoFinal: string;
-  vencimentoInicial: string;
+  vencimentoFinal?: string;
+  vencimentoInicial?: string;
   vendedor?: number;
 };
 
@@ -119,6 +122,13 @@ export function fetchEstoques(
   signal?: AbortSignal,
 ): Promise<PaginatedResponse<EstoqueConsulta>> {
   return request('/estoques', { params: query, signal, token });
+}
+
+export type ProdutoResolvido = EstoqueConsulta;
+
+export async function resolverProduto(token: string, identificador: string, signal?: AbortSignal): Promise<ProdutoResolvido> {
+  const response = await request<{ data: ProdutoResolvido }>('/estoques/resolver', { params: { identificador }, signal, token });
+  return response.data;
 }
 
 export function fetchVendas(

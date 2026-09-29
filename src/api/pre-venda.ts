@@ -2,7 +2,7 @@ import type { CondicaoPagamento, Cliente, Parcela, Produto, Vendedor } from '../
 import { request } from './client';
 
 type Paginated<T> = { data: T[]; meta: { page: number; limit: number; total: number; totalPages: number } };
-type ListOptions = { page?: number; limit?: number; busca?: string; descricao?: string; produto?: number; somenteComEstoque?: boolean; clienteCodigo?: number };
+type ListOptions = { page?: number; limit?: number; busca?: string; cidade?: string | number; descricao?: string; produto?: number; somenteComEstoque?: boolean; clienteCodigo?: number };
 
 function queryString(options: ListOptions) {
   const params = new URLSearchParams();
@@ -20,8 +20,8 @@ export async function fetchClientes(token: string, options: ListOptions = {}, si
 }
 
 export async function fetchProdutos(token: string, options: ListOptions = {}, signal?: AbortSignal): Promise<Paginated<Produto>> {
-  const response = await request<Paginated<{ codigoProduto: number; descricao: string; unidade: string | null; precoVenda: number | null; origemPreco?: 'TABELA_CLIENTE' | 'ESTOQUE'; estoqueAtual: number; filialNome: string }>>(`/estoques${queryString(options)}`, { token, signal });
-  return { ...response, data: response.data.map((produto) => ({ ...produto, codigo: produto.codigoProduto, valorUnitario: typeof produto.precoVenda === 'number' && Number.isFinite(produto.precoVenda) ? produto.precoVenda : 0 })) };
+  const response = await request<Paginated<{ codigoProduto: number; descricao: string; unidade: string | null; precoVenda: number | null; precoVenda1: number | null; precoVenda2: number | null; precoVenda3: number | null; origemPreco: 'ESTOQUE'; estoqueAtual: number; filial: number }>>(`/estoques${queryString(options)}`, { token, signal });
+  return { ...response, data: response.data.map((produto) => ({ ...produto, codigo: produto.codigoProduto })) };
 }
 
 export async function fetchFormasPagamento(token: string, options: ListOptions = {}, signal?: AbortSignal): Promise<Paginated<CondicaoPagamento>> {

@@ -1,32 +1,9 @@
-# React + TypeScript + Vite
+# Gyn Plástico App
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Aplicativo web e Android feito com React, Vite e Capacitor 8. A URL da API deve ser configurada em `VITE_API_URL`, incluindo o prefixo `/api/v1` (veja `.env.example`).
 
-Currently, two official plugins are available:
+## Scanner de produtos
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+O scanner usa `@capacitor/barcode-scanner` 3.x, plugin mantido pelo time Ionic e compatível com Capacitor 8. No Android, o plugin exige `minSdkVersion 26`, configurado em `android/variables.gradle`. O app lê a string do código e a envia para `/estoques/resolver`; a pesquisa manual continua disponível caso o scanner não possa ser usado.
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
-```
-
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Após alterar dependências nativas, sincronize o projeto Android com `npx cap sync android`.

@@ -59,8 +59,18 @@ export async function request<T>(path: string, options: RequestOptions = {}): Pr
 
   if (!response.ok) {
     const apiError = isApiErrorResponse(payload) ? payload : undefined;
+    if (response.status === 401 && options.token) {
+      window.dispatchEvent(new Event('gyn-plastico:session-expired'));
+    }
+    const messages: Record<number, string> = {
+      401: 'Sua sessão expirou. Entre novamente.',
+      403: 'Você não tem autorização para realizar esta ação. A pré-venda pode estar temporariamente desabilitada.',
+      404: 'O registro ou produto solicitado não foi encontrado.',
+      422: 'A API não aceitou os dados informados. Revise cliente, pagamento, parcela e produtos.',
+      429: 'Muitas tentativas. Aguarde um pouco e tente novamente.',
+    };
     throw new ApiError(
-      apiError?.message ?? 'Não foi possível concluir a solicitação.',
+      messages[response.status] ?? (response.status >= 500 ? 'O serviço está temporariamente indisponível. Tente novamente mais tarde.' : 'Não foi possível concluir a solicitação.'),
       response.status,
       apiError?.code,
       apiError?.details,
