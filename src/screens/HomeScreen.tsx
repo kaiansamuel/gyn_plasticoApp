@@ -28,7 +28,7 @@ export function HomeScreen() {
   return (
     <div className={styles.page}>
       <ScreenHeader
-        title="SigeApp"
+        title="Gyn Plástico"
         subtitle={`${usuario.nome} · ${usuario.filial.nome}`}
         onLogout={handleLogout}
       />

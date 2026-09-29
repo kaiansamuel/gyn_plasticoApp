@@ -1,4 +1,4 @@
-package br.com.sigeapp.pravoce;
+package br.com.gynplastico.app;
 
 import com.getcapacitor.BridgeActivity;
 

@@ -82,7 +82,7 @@ export function LoginScreen() {
     <div className={styles.page}>
       <div className={styles.brand}>
         <span className={styles.brandMark}>SG</span>
-        <p className={styles.brandName}>SigeApp</p>
+        <p className={styles.brandName}>Gyn Plástico</p>
         <p className={styles.brandTagline}>Acesso seguro ao seu ERP</p>
       </div>
 
